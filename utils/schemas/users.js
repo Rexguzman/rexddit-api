@@ -10,6 +10,7 @@ const userSchema = {
 const createUserSchema = {
     ...userSchema,
     name: joi.string().max(100).required(),
+    img: joi.string().uri(),
 };
 
 module.exports = {

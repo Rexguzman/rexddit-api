@@ -1,4 +1,5 @@
 const express = require('express');
+const passport = require('passport')
 
 const ChannelsService = require('../services/channels');
 const validationHandler = require('../utils/middleware/validationHandler');
@@ -6,6 +7,8 @@ const scopesValidationHandler = require('../utils/middleware/scopesValidationHan
 
 const { createChannel, insertComment } = require('../utils/schemas/channels');
 const { ObjectId } = require('bson');
+
+require('../utils/auth/strategies/jwt.js')
 
 
 function channelsApi(app) {
@@ -31,7 +34,8 @@ function channelsApi(app) {
 
     router.post(
         '/',
-        //validationHandler(createChannel),
+        passport.authenticate('jwt', { session: false }),
+        validationHandler(createChannel),
         async (req, res, next) => {
             try {
                 const data = req.body;
@@ -52,6 +56,7 @@ function channelsApi(app) {
 
     router.put(
         '/comment',
+        passport.authenticate('jwt', { session: false }),
         validationHandler(insertComment),
         async (req, res, next) => {
             try {
